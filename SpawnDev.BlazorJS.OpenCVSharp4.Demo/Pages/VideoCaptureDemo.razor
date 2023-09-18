@@ -1,0 +1,19 @@
+﻿@page "/VideoCaptureDemo"
+@using SpawnDev.BlazorJS.JSObjects
+@using OpenCvSharp;
+
+<PageTitle>Video Capture Demo</PageTitle>
+
+<h1>OpenCVSharp4 Video Capture Demo</h1>
+
+<button @onclick=@PlayUserMedia>Source: Webcam</button>
+<button @onclick=@PlayRemoteVideo>Source: Video URL</button>
+<br />
+<canvas @ref=canvasSrcRef></canvas>
+<br />
+<canvas @ref=canvasDestRef></canvas>
+<br />
+
+@code {
+  
+}
