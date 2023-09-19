@@ -2,14 +2,16 @@
 @using SpawnDev.BlazorJS.JSObjects
 @using OpenCvSharp;
 
-<PageTitle>Index</PageTitle>
+<PageTitle>OpenCVSharp4 Blazor WASM Demo</PageTitle>
 
-<h1>OpenCVSharp4 Simple Demo</h1>
+<h1>OpenCVSharp4 Blazor WASM Demo</h1>
+<p>
+    Basic example that loads an image from remote server and runs a opencv canny edge detection on it.
+</p>
 
-<canvas @ref=canvasSrcRef></canvas>
-<br />
-<canvas @ref=canvasDestRef></canvas>
-<br />
+<canvas style="zoom: 50%; border: 1px solid grey;" @ref=canvasSrcRef></canvas>
+<canvas style="zoom: 50%; border: 1px solid grey;" @ref=canvasDestRef></canvas>
+
 
 @code {
     ElementReference canvasSrcRef;

@@ -1,9 +1,9 @@
-﻿using SpawnDev.BlazorJS.JSObjects;
+﻿using Microsoft.AspNetCore.Components;
 using OpenCvSharp;
-using Timer = System.Timers.Timer;
-using Microsoft.AspNetCore.Components;
-using SpawnDev.BlazorJS.Toolbox;
+using SpawnDev.BlazorJS.JSObjects;
 using SpawnDev.BlazorJS.OpenCVSharp4.Services;
+using SpawnDev.BlazorJS.Toolbox;
+using Timer = System.Timers.Timer;
 
 namespace SpawnDev.BlazorJS.OpenCVSharp4.Demo.Pages
 {
@@ -17,20 +17,15 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Demo.Pages
         OpenCVService OpenCVService { get; set; }
 
         ElementReference canvasSrcRef;
-        ElementReference canvasDestRef;
         Timer timer = new Timer();
         VideoCapture? videoCapture;
         HTMLCanvasElement? canvasSrcEl;
         CanvasRenderingContext2D? canvasSrcCtx;
-        HTMLCanvasElement? canvasDestEl;
-        CanvasRenderingContext2D? canvasDestCtx;
         MediaStream? mediaStream = null;
         Mat? src;
-        Mat? dest;
-        // https://gist.github.com/jsturgis/3b19447b304616f18657
-        // http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4
-        // http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4
-        string TestVideo = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4";
+        // Video source
+        // https://github.com/intel-iot-devkit/sample-videos
+        string TestVideo = "test-videos/face-demographics-walking-and-pause.mp4";
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -39,8 +34,6 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Demo.Pages
             {
                 canvasSrcEl = new HTMLCanvasElement(canvasSrcRef);
                 canvasSrcCtx = canvasSrcEl.Get2DContext();
-                canvasDestEl = new HTMLCanvasElement(canvasDestRef);
-                canvasDestCtx = canvasDestEl.Get2DContext();
                 videoCapture = new VideoCapture();
                 videoCapture.Video.CrossOrigin = "anonymous";   // allows videos from others domains using cors
                 timer.Elapsed += Timer_Elapsed;
@@ -90,11 +83,8 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Demo.Pages
             var succ = videoCapture.Read(src);
             if (!succ) return;
             var res = OpenCVService.FaceDetect(src);
-            if (res.Any())
-            {
-                OpenCVService.MarkFeatures(src, res);
-            }
-            src.DrawOnCanvas(canvasDestCtx, true);
+            OpenCVService.MarkFeatures(src, res);
+            src.DrawOnCanvas(canvasSrcCtx, true);
         }
     }
 }

@@ -1,0 +1,69 @@
+﻿@using Markdig
+@using Microsoft.AspNetCore.Components
+@using System.Text
+@using System.Text.RegularExpressions
+@using Markdown.ColorCode
+
+<div>
+    @((MarkupString)_markup)
+</div>
+
+@code {
+    [Inject]
+    HttpClient httpClient { get; set; }
+
+    [Inject]
+    BlazorJSRuntime JS { get; set; }
+
+    [Parameter]
+    public string CSharpCodeURL { get; set; } = "";
+
+    MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseColorCode().Build();
+
+    string _markup = "";
+    bool _shouldRender = true;
+    string _markDown = "";
+    string _markDownSection = "";
+    Uri? _markDownUri { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _markDownUri = string.IsNullOrEmpty(CSharpCodeURL) ? null : new Uri(CSharpCodeURL);
+        await LoadMarkdown();
+        _shouldRender = true;
+        await base.OnParametersSetAsync();
+    }
+
+    async Task LoadMarkdown()
+    {
+        var markDown = "";
+        if (_markDownUri != null)
+        {
+            try
+            {
+                markDown = await httpClient.GetStringAsync(_markDownUri);
+            }
+            catch (Exception ex)
+            {
+                BlazorJSRuntime.JS.Log($"Exception: {ex.Message}");
+            }
+            markDown = $"```cs {markDown} ```";
+            _markup = Markdown.ToHtml(markDown, pipeline);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (_shouldRender)
+        {
+            // render complete. disable further rerenders until params change
+            _shouldRender = false;
+        }
+    }
+
+    protected override bool ShouldRender()
+    {
+        return _shouldRender;
+    }
+}
