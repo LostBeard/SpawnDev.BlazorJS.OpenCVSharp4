@@ -6,7 +6,26 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<WasmBuildNative>true</WasmBuildNative>
+		<Version>1.0.1</Version>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>SpawnDev.BlazorJS.OpenCVSharp4</Title>
+		<Authors>LostBeard</Authors>
+		<Description>SpawnDev.BlazorJS.OpenCVSharp4 adds tools too help with openCVSHarp4 adn Blazor WASM</Description>
+		<PackageProjectUrl>https://github.com/LostBeard/SpawnDev.BlazorJS.OpenCVSharp4</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<RepositoryUrl>https://github.com/LostBeard/SpawnDev.BlazorJS.OpenCVSharp4.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>Blazor;BlazorWebAssembly;DotNet;OpenCVSharp4</PackageTags>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\LICENSE.txt" Pack="true" PackagePath="" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
