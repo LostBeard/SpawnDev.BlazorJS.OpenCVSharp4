@@ -11,10 +11,11 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4
             var bytes = rgbaArrayBuffer.ReadBytes();
             src.SetRGBABytes(bytes);
         }
+
         public static void SetRGBABytes(this Mat src, byte[] rgbaBytes)
         {
             var length = (int)(src.Step() * src.Height);
-            if (length != rgbaBytes.Length) throw new Exception("WriteMatRGBABytes: Invalid data size or step size mismatch");
+            if (length != rgbaBytes.Length) throw new Exception("Invalid data size or step size mismatch");
             Marshal.Copy(rgbaBytes, 0, src.DataStart, length);
         }
 
@@ -27,40 +28,6 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4
             var length = (int)(mat.DataEnd.ToInt64() - mat.DataStart.ToInt64());
             if (length != bytes.Length) throw new InvalidOperationException("Mat size does not match bytes being set");
             Marshal.Copy(bytes, 0, mat.DataStart, length);
-        }
-
-        public static ArrayBuffer GetRGBAArrayBuffer(this Mat mat)
-        {
-            var bytes = mat.GetRGBABytes();
-            using var uint8 = new Uint8Array(bytes);
-            return uint8.Buffer;
-        }
-
-        public static void DrawOnCanvas(this Mat mat, CanvasRenderingContext2D ctx, bool autoResizeCanvas = false)
-        {
-            if (autoResizeCanvas)
-            {
-                using var canvas = ctx.Canvas;
-                if (canvas.Width != mat.Width || canvas.Height != mat.Height)
-                {
-                    canvas.Width = mat.Width;
-                    canvas.Height = mat.Height;
-                }
-            }
-            var bytes = mat.GetRGBABytes();
-            if (bytes != null)
-            {
-                ctx.PutImageBytes(bytes, mat.Width, mat.Height);
-            }
-        }
-
-        public static void DrawOnCanvas(this Mat mat, CanvasRenderingContext2D ctx, int dx, int dy)
-        {
-            var bytes = mat.GetRGBABytes();
-            if (bytes != null)
-            {
-                ctx.PutImageBytes(bytes, mat.Width, mat.Height, dx, dy);
-            }
         }
 
         public static void SetHomography(this Mat mat, byte[] homographyBytes)
@@ -127,6 +94,40 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4
                 rgba?.Dispose();
             }
             return ret;
+        }
+
+        public static ArrayBuffer GetRGBAArrayBuffer(this Mat mat)
+        {
+            var bytes = mat.GetRGBABytes();
+            using var uint8 = new Uint8Array(bytes);
+            return uint8.Buffer;
+        }
+
+        public static void DrawOnCanvas(this Mat mat, CanvasRenderingContext2D ctx, bool autoResizeCanvas = false)
+        {
+            if (autoResizeCanvas)
+            {
+                using var canvas = ctx.Canvas;
+                if (canvas.Width != mat.Width || canvas.Height != mat.Height)
+                {
+                    canvas.Width = mat.Width;
+                    canvas.Height = mat.Height;
+                }
+            }
+            var bytes = mat.GetRGBABytes();
+            if (bytes != null)
+            {
+                ctx.PutImageBytes(bytes, mat.Width, mat.Height);
+            }
+        }
+
+        public static void DrawOnCanvas(this Mat mat, CanvasRenderingContext2D ctx, int dx, int dy)
+        {
+            var bytes = mat.GetRGBABytes();
+            if (bytes != null)
+            {
+                ctx.PutImageBytes(bytes, mat.Width, mat.Height, dx, dy);
+            }
         }
 
         public static async Task LoadImageURL(this Mat mat, string url, string? crossOrigin = "anonymous")
