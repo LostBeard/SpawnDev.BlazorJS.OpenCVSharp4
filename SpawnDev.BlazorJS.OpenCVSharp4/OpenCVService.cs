@@ -11,15 +11,13 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Services
 
     public class OpenCVService : IAsyncBackgroundService, IDisposable
     {
-        WebWorkerService _webWorkerService;
         HttpClient _httpClient;
         CascadeClassifier? face_cascade = null;
         CascadeClassifier? eyes_cascade = null;
 
-        public OpenCVService(WebWorkerService webWorkerService, HttpClient httpClient)
+        public OpenCVService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _webWorkerService = webWorkerService;
         }
 
         public async Task InitAsync()
