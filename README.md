@@ -8,7 +8,7 @@ Demonstrates the use of the Nuget packages [OpenCVSharp4](https://www.nuget.org/
 - Canny edge detection on an image.
 - Haar cascade face and eye detection with video and webcam sources.
 
-[OpenCVSharp4 repo]([OpenCVSharp4](https://github.com/shimat/opencvsharp))
+[OpenCVSharp4 repo](https://github.com/shimat/opencvsharp)
 
 # SpawnDev.BlazorJS.OpenCVSharp4
 
