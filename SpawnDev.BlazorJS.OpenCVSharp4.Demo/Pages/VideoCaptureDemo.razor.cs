@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using OpenCvSharp;
 using SpawnDev.BlazorJS.JSObjects;
-using SpawnDev.BlazorJS.OpenCVSharp4.Services;
 using SpawnDev.BlazorJS.Toolbox;
 using Timer = System.Timers.Timer;
 
@@ -9,12 +8,17 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Demo.Pages
 {
     public partial class VideoCaptureDemo : IDisposable
     {
+        class FaceFeature
+        {
+            public Rect Face { get; set; }
+            public Rect[] Eyes { get; set; } = new Rect[0];
+        }
 
         [Inject]
         MediaDevicesService MediaDevicesService { get; set; }
 
         [Inject]
-        OpenCVService OpenCVService { get; set; }
+        HttpClient HttpClient { get; set; }
 
         ElementReference canvasSrcRef;
         Timer timer = new Timer();
@@ -36,22 +40,31 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Demo.Pages
             if (!beenInit)
             {
                 beenInit = true;
-                face_cascade = await OpenCVService.LoadCascadeClassifier("haarcascades/haarcascade_frontalface_default.xml");
-                eyes_cascade = await OpenCVService.LoadCascadeClassifier("haarcascades/haarcascade_eye.xml");
+                face_cascade = await LoadCascadeClassifier("haarcascades/haarcascade_frontalface_default.xml");
+                eyes_cascade = await LoadCascadeClassifier("haarcascades/haarcascade_eye.xml");
                 canvasSrcEl = new HTMLCanvasElement(canvasSrcRef);
                 canvasSrcCtx = canvasSrcEl.Get2DContext();
                 videoCapture = new VideoCapture();
-                videoCapture.Video.CrossOrigin = "anonymous";   // allows videos from others domains using cors
+                videoCapture.Video.CrossOrigin = "anonymous";   // allows videos from other domains using cors
                 timer.Elapsed += Timer_Elapsed;
                 timer.Interval = 1000d / 60d;
                 timer.Enabled = true;
             }
         }
 
+        async Task<CascadeClassifier> LoadCascadeClassifier(string url)
+        {
+            var text = await HttpClient.GetStringAsync(url);
+            System.IO.File.WriteAllText("tmp.xml", text);
+            var cascadeClassifier = new CascadeClassifier("tmp.xml");
+            System.IO.File.Delete("tmp.xml");
+            return cascadeClassifier;
+        }
+
         // https://github.com/opencv/opencv/tree/master/rgbaBytes/haarcascades
         // https://github.com/VahidN/OpenCVSharp-Samples/blob/master/OpenCVSharpSample15/Program.cs
         // https://www.tech-quantum.com/have-fun-with-webcam-and-opencv-in-csharp-part-2/
-        public List<FaceFeature> FaceDetect(Mat image)
+        List<FaceFeature> FaceDetect(Mat image)
         {
             var features = new List<FaceFeature>();
             var faces = DetectFaces(image);
@@ -71,7 +84,7 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Demo.Pages
             return features;
         }
 
-        public void MarkFeatures(Mat image, List<FaceFeature> features)
+        void MarkFeatures(Mat image, List<FaceFeature> features)
         {
             foreach (FaceFeature feature in features)
             {
@@ -84,13 +97,13 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Demo.Pages
             }
         }
 
-        private Rect[] DetectEyes(Mat image)
+        Rect[] DetectEyes(Mat image)
         {
             Rect[] faces = eyes_cascade == null ? new Rect[0] : eyes_cascade.DetectMultiScale(image, 1.3, 5);
             return faces;
         }
 
-        private Rect[] DetectFaces(Mat image)
+        Rect[] DetectFaces(Mat image)
         {
             Rect[] faces = face_cascade == null ? new Rect[0] : face_cascade.DetectMultiScale(image, 1.3, 5);
             return faces;
@@ -147,6 +160,7 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Demo.Pages
             if (beenInit)
             {
                 beenInit = false;
+                timer.Dispose();
                 face_cascade?.Dispose();
                 eyes_cascade?.Dispose();
                 videoCapture?.Dispose();
