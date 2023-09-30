@@ -1,6 +1,6 @@
 ﻿@page "/"
 @using SpawnDev.BlazorJS.JSObjects
-@using OpenCvSharp;
+@using OpenCvSharp
 
 <PageTitle>OpenCVSharp4 Blazor WASM Demo</PageTitle>
 
@@ -22,7 +22,6 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
             using var canvasSrcEl = new HTMLCanvasElement(canvasSrcRef);

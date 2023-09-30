@@ -1,30 +1,38 @@
 # SpawnDev.BlazorJS.OpenCVSharp4
 
-Includes some tools for working with OpenCVSharp4 in Blazor WebAssembly.
+Includes tools for working with OpenCVSharp4 in Blazor WebAssembly including Mat extension methods, and a VideoCapture class for working with ```<video>``` elements.
 
 In the below Canny edge detection example the Mat extension method LoadImageURL loads an image from a URL into the Mat. And the method extension DrawOnCanvas draws a Mat onto a canvas 2D context.
 
-```cs
-ElementReference canvasSrcRef;
-ElementReference canvasDestRef;
-string TestImage = "https://i.imgur.com/WOZagma.jpeg";
+```html
+@using SpawnDev.BlazorJS.JSObjects
+@using OpenCvSharp
 
-protected override async Task OnAfterRenderAsync(bool firstRender)
-{
-    if (firstRender)
+<canvas style="zoom: 50%; border: 1px solid grey;" @ref=canvasSrcRef></canvas>
+<canvas style="zoom: 50%; border: 1px solid grey;" @ref=canvasDestRef></canvas>
+```
+```cs
+@code {
+    ElementReference canvasSrcRef;
+    ElementReference canvasDestRef;
+    string TestImage = "https://i.imgur.com/WOZagma.jpeg";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        using var canvasSrcEl = new HTMLCanvasElement(canvasSrcRef);
-        using var canvasSrcCtx = canvasSrcEl.Get2DContext();
-        using var canvasDestEl = new HTMLCanvasElement(canvasDestRef);
-        using var canvasDestCtx = canvasDestEl.Get2DContext();
-        using var src = new Mat();
-        await src.LoadImageURL(TestImage);
-        src.DrawOnCanvas(canvasSrcCtx, true);
-        using var dst = new Mat();
-        Cv2.Canny(src, dst, 50, 200);
-        dst.DrawOnCanvas(canvasDestCtx, true);
+        if (firstRender)
+        {
+            using var canvasSrcEl = new HTMLCanvasElement(canvasSrcRef);
+            using var canvasSrcCtx = canvasSrcEl.Get2DContext();
+            using var canvasDestEl = new HTMLCanvasElement(canvasDestRef);
+            using var canvasDestCtx = canvasDestEl.Get2DContext();
+            using var src = new Mat();
+            await src.LoadImageURL(TestImage);
+            src.DrawOnCanvas(canvasSrcCtx, true);
+            using var dst = new Mat();
+            Cv2.Canny(src, dst, 50, 200);
+            dst.DrawOnCanvas(canvasDestCtx, true);
+        }
     }
-    await base.OnAfterRenderAsync(firstRender);
 }
 ```
 
