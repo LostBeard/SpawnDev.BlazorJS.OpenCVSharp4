@@ -5,7 +5,7 @@
 Demonstrates the use of the Nuget packages [OpenCVSharp4](https://www.nuget.org/packages/OpenCvSharp4) and [OpenCvSharp4.runtime.wasm](https://www.nuget.org/packages/OpenCvSharp4.runtime.wasm/) in Blazor WebAssembly. 
 
 ### Demos  
-- Canny edge detection using an image.
+- Canny edge detection on an image.
 - Haar cascade face and eye detection with video and webcam sources.
 
 [OpenCVSharp4 repo]([OpenCVSharp4](https://github.com/shimat/opencvsharp))
@@ -14,7 +14,7 @@ Demonstrates the use of the Nuget packages [OpenCVSharp4](https://www.nuget.org/
 
 Includes tools for working with OpenCVSharp4 in Blazor WebAssembly including Mat extension methods, and a VideoCapture class for working with ```<video>``` elements.
 
-In the below Canny edge detection example the Mat extension method LoadImageURL loads an image from a URL into the Mat. And the method extension DrawOnCanvas draws a Mat onto a canvas 2D context.
+In the below Canny edge detection example the Mat extension method LoadImageURL loads an image from a URL into the Mat. And the Mat extension method DrawOnCanvas draws a Mat onto a canvas 2D context.
 
 ```html
 @using SpawnDev.BlazorJS.JSObjects
