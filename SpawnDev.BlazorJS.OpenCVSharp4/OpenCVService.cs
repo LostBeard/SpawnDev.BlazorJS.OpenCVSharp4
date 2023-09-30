@@ -93,26 +93,10 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Services
             return cascadeClassifier;
         }
 
-        public bool IsDisposed { get; private set; }
         public void Dispose()
         {
-            if (IsDisposed) return;
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        protected virtual void Dispose(bool disposing)
-        {
-            if (IsDisposed) return;
-            IsDisposed = true;
-            if (disposing)
-            {
-                face_cascade?.Dispose();
-                eyes_cascade?.Dispose();
-            }
-        }
-        ~OpenCVService()
-        {
-            Dispose(false);
+            face_cascade?.Dispose();
+            eyes_cascade?.Dispose();
         }
     }
 }
