@@ -40,18 +40,11 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4
         {
             if (autoResizeCanvas)
             {
-                try
+                using var canvas = ctx.Canvas;
+                if (canvas.Width != mat.Width || canvas.Height != mat.Height)
                 {
-                    using var canvas = ctx.Canvas;
-                    if (canvas.Width != mat.Width || canvas.Height != mat.Height)
-                    {
-                        canvas.Width = mat.Width;
-                        canvas.Height = mat.Height;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    var tt = true;
+                    canvas.Width = mat.Width;
+                    canvas.Height = mat.Height;
                 }
             }
             var bytes = mat.GetRGBABytes();

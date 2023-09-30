@@ -2,6 +2,9 @@
 using SpawnDev.BlazorJS.JSObjects;
 using SpawnDev.BlazorJS.WebWorkers;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
 
 namespace SpawnDev.BlazorJS.OpenCVSharp4.Services
 {
@@ -23,112 +26,16 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Services
         {
             face_cascade = await LoadCascadeClassifier("haarcascades/haarcascade_frontalface_default.xml");
             eyes_cascade = await LoadCascadeClassifier("haarcascades/haarcascade_eye.xml");
+
+            var contour = new Point[] { new Point(1, 2), new Point(3, 4) };
+            // make sure to use JsonSerializerOptions IncludeFields = true for both serialize and deserialize
+            var serializeStructOptions = new JsonSerializerOptions { IncludeFields = true };
+            var seraiizedContour = JsonSerializer.Serialize(contour, serializeStructOptions);
+            System.IO.File.WriteAllText("contours.json", seraiizedContour);
+            // and to load
+            var contourReadBack = JsonSerializer.Deserialize<Point[]>(System.IO.File.ReadAllText("contours.json"), serializeStructOptions);
+           
         }
-
-        //function getImageRGBABytes(url)
-        //{
-        //    return new Promise((resolve, reject) =>
-        //    {
-        //        var img = new Image();
-        //        img.onload = () =>
-        //        {
-        //            var canvas = document.createElement('canvas');
-        //            var context = canvas.getContext('2d');
-        //            context.drawImage(img, 0, 0, img.width, img.height);
-        //            resolve(context.getImageData(0, 0, img.width, img.height).data);
-        //        };
-        //        img.onerror = (e) => reject(e);
-        //        img.src = url;
-        //    });
-        //}
-
-        //Task<byte[]> GetImageRGBABytes(string url)
-        //{
-        //    var tcs = new TaskCompletionSource<byte[]>();
-        //    var image = new HTMLImageElement();
-        //    var imageCallbacks = new CallbackGroup();
-        //    image.AddEventListener("load", Callback.Create(() =>
-        //    {
-        //        imageCallbacks.Dispose();
-        //        using var canvas = new HTMLCanvasElement();
-        //        using var context = canvas.Get2DContext();
-        //        context.DrawImage(image, 0, 0);
-        //        using var imageData = context.GetImageData(0, 0, image.Width, image.Height);
-        //        using var uint8ClampedArray = imageData.Data;
-        //        using var arrayBuffer = uint8ClampedArray.Buffer;
-        //        var data = arrayBuffer.ReadBytes();
-        //        image.Dispose();
-        //        tcs.TrySetResult(data);
-        //    }, imageCallbacks));
-        //    image.AddEventListener("error", Callback.Create(() =>
-        //    {
-        //        imageCallbacks.Dispose();
-        //        image.Dispose();
-        //        tcs.TrySetException(new Exception("Load failed"));
-        //    }, imageCallbacks));
-        //    image.Src = url;
-        //    return tcs.Task;
-        //}
-
-        //Task<byte[]> GetImageRGBABytes1(string url)
-        //{
-        //    var tcs = new TaskCompletionSource<byte[]>();
-        //    var image = new HTMLImageElement();
-        //    var imageCallbacks = new CallbackGroup();
-        //    image.AddEventListener("load", Callback.Create(() =>
-        //    {
-        //        imageCallbacks.Dispose();
-        //        using var canvas = new HTMLCanvasElement();
-        //        using var context = canvas.Get2DContext();
-        //        context.DrawImage(image, 0, 0);
-        //        using var imageData = context.GetImageData(0, 0, image.Width, image.Height);
-        //        using var uint8ClampedArray = imageData.Data;
-        //        using var arrayBuffer = uint8ClampedArray.Buffer;
-        //        var data = arrayBuffer.ReadBytes();
-        //        image.Dispose();
-        //        tcs.TrySetResult(data);
-        //    }, imageCallbacks));
-        //    image.AddEventListener("error", Callback.Create(() =>
-        //    {
-        //        imageCallbacks.Dispose();
-        //        image.Dispose();
-        //        tcs.TrySetException(new Exception("Load failed"));
-        //    }, imageCallbacks));
-        //    image.Src = url;
-        //    return tcs.Task;
-        //}
-
-        //Task<Mat> GetImageAsMat(string url)
-        //{
-        //    var tcs = new TaskCompletionSource<Mat>();
-        //    var image = new HTMLImageElement();
-        //    var imageCallbacks = new CallbackGroup();
-        //    image.AddEventListener("load", Callback.Create(() =>
-        //    {
-        //        imageCallbacks.Dispose();
-        //        using var canvas = new HTMLCanvasElement();
-        //        using var context = canvas.Get2DContext();
-        //        canvas.Width = image.Width;
-        //        canvas.Height = image.Height;
-        //        context.DrawImage(image, 0, 0);
-        //        using var imageData = context.GetImageData(0, 0, image.Width, image.Height);
-        //        using var uint8ClampedArray = imageData.Data;
-        //        using var arrayBuffer = uint8ClampedArray.Buffer;
-        //        var rgbaBytes = arrayBuffer.ReadBytes();
-        //        var mat = new Mat(new Size(image.Width, image.Height), MatType.CV_8UC4);
-        //        Marshal.Copy(rgbaBytes, 0, mat.DataStart, rgbaBytes.Length);
-        //        tcs.TrySetResult(mat);
-        //        image.Dispose();
-        //    }, imageCallbacks));
-        //    image.AddEventListener("error", Callback.Create(() =>
-        //    {
-        //        imageCallbacks.Dispose();
-        //        image.Dispose();
-        //        tcs.TrySetException(new Exception("Load failed"));
-        //    }, imageCallbacks));
-        //    image.Src = url;
-        //    return tcs.Task;
-        //}
 
         // https://github.com/opencv/opencv/tree/master/rgbaBytes/haarcascades
         // https://github.com/VahidN/OpenCVSharp-Samples/blob/master/OpenCVSharpSample15/Program.cs
