@@ -1,10 +1,4 @@
 ﻿using OpenCvSharp;
-using SpawnDev.BlazorJS.JSObjects;
-using SpawnDev.BlazorJS.WebWorkers;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text.Json;
 
 namespace SpawnDev.BlazorJS.OpenCVSharp4.Services
 {
@@ -24,15 +18,6 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Services
         {
             face_cascade = await LoadCascadeClassifier("haarcascades/haarcascade_frontalface_default.xml");
             eyes_cascade = await LoadCascadeClassifier("haarcascades/haarcascade_eye.xml");
-
-            var contour = new Point[] { new Point(1, 2), new Point(3, 4) };
-            // make sure to use JsonSerializerOptions IncludeFields = true for both serialize and deserialize
-            var serializeStructOptions = new JsonSerializerOptions { IncludeFields = true };
-            var seraiizedContour = JsonSerializer.Serialize(contour, serializeStructOptions);
-            System.IO.File.WriteAllText("contours.json", seraiizedContour);
-            // and to load
-            var contourReadBack = JsonSerializer.Deserialize<Point[]>(System.IO.File.ReadAllText("contours.json"), serializeStructOptions);
-           
         }
 
         // https://github.com/opencv/opencv/tree/master/rgbaBytes/haarcascades
@@ -83,7 +68,7 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Services
             return faces;
         }
 
-        async Task<CascadeClassifier> LoadCascadeClassifier(string url)
+        public async Task<CascadeClassifier> LoadCascadeClassifier(string url)
         {
             var text = await _httpClient.GetStringAsync(url);
             System.IO.File.WriteAllText("tmp.xml", text);
