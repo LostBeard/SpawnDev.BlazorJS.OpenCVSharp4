@@ -11,9 +11,11 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Demo
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
+            // BlazorJS for easy JS interop
             builder.Services.AddBlazorJSRuntime();
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            // MediaDevicesService for webcam access
             builder.Services.AddSingleton<MediaDevicesService>();
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             await builder.Build().RunAsync();
         }
     }
