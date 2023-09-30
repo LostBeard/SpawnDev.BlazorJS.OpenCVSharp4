@@ -4,4 +4,9 @@
 
 This repo demonstrates OpenCVSharp4 in Blazor WASM.
 
+### Demos  
+- Canny edge detection using a remote hosted image.
+
+- Haar cascade face and eye detection with video and webcam sources.
+
 
