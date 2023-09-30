@@ -70,11 +70,11 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Demo.Pages
             var faces = DetectFaces(image);
             foreach (var item in faces)
             {
-                //Get the region of interest where you can find facial features
+                // Get face region
                 using Mat face_roi = image[item];
-                //Detect eyes
+                // Detect eyes in the face region
                 Rect[] eyes = DetectEyes(face_roi);
-                //Record the facial features in a list
+                // Add to results
                 features.Add(new FaceFeature()
                 {
                     Face = item,
@@ -123,6 +123,7 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Demo.Pages
 
         async Task PlayRemoteVideo()
         {
+            if (videoCapture == null) return;
             try
             {
                 StopPlaying();
@@ -133,6 +134,7 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Demo.Pages
 
         async Task PlayUserMedia()
         {
+            if (videoCapture == null) return;
             try
             {
                 StopPlaying();
@@ -156,16 +158,18 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Demo.Pages
 
         public void Dispose()
         {
-            // Dispose OpenCV resources
             if (beenInit)
             {
                 beenInit = false;
                 timer.Dispose();
+                StopPlaying();
+                videoCapture?.Dispose();
+                videoCapture = null;
                 face_cascade?.Dispose();
                 eyes_cascade?.Dispose();
-                videoCapture?.Dispose();
                 canvasSrcEl?.Dispose();
                 canvasSrcCtx?.Dispose();
+                src?.Dispose();
             }
         }
     }
