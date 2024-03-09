@@ -30,7 +30,7 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4
         {
             var w = Video.VideoWidth;
             var h = Video.VideoHeight;
-            var videoFrameSize = w == 0 || h == 0 ? Size.Zero : new Size(w, h);
+            var videoFrameSize = w == 0 || h == 0 ? new Size() : new Size(w, h);
             if (SourceVideoFrameSize != videoFrameSize)
             {
                 _cameraCanvasEl.Width = w;
@@ -50,7 +50,7 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4
             ImageData? ret = null;
             VideoSizeChangedCheck();
             frameSize = new Size(SourceVideoFrameSize.Width, SourceVideoFrameSize.Height);
-            if (SourceVideoFrameSize != Size.Zero)
+            if (SourceVideoFrameSize.Width > 0)
             {
                 _cameraCanvasElCtx.DrawImage(Video);
                 ret = _cameraCanvasElCtx.GetImageData(0, 0, SourceVideoFrameSize.Width, SourceVideoFrameSize.Height);
@@ -62,7 +62,7 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4
         {
             ImageData? ret = null;
             VideoSizeChangedCheck();
-            if (SourceVideoFrameSize != Size.Zero)
+            if (SourceVideoFrameSize.Width > 0)
             {
                 _cameraCanvasElCtx.DrawImage(Video);
                 ret = _cameraCanvasElCtx.GetImageData(0, 0, SourceVideoFrameSize.Width, SourceVideoFrameSize.Height);
@@ -75,7 +75,7 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4
             ArrayBuffer? ret = null;
             VideoSizeChangedCheck();
             frameSize = new Size(SourceVideoFrameSize.Width, SourceVideoFrameSize.Height);
-            if (SourceVideoFrameSize != Size.Zero)
+            if (SourceVideoFrameSize.Width > 0)
             {
                 _cameraCanvasElCtx.DrawImage(Video);
                 using var srcRGBA = _cameraCanvasElCtx.GetImageData(0, 0, SourceVideoFrameSize.Width, SourceVideoFrameSize.Height);
@@ -97,7 +97,7 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4
         {
             var ret = false;
             VideoSizeChangedCheck();
-            if (SourceVideoFrameSize != Size.Zero)
+            if (SourceVideoFrameSize.Width > 0)
             {
                 _cameraCanvasElCtx.DrawImage(Video);
                 var srcRGBA = _cameraCanvasElCtx.GetImageBytes();

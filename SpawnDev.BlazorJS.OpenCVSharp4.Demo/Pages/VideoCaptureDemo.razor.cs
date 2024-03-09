@@ -139,7 +139,7 @@ namespace SpawnDev.BlazorJS.OpenCVSharp4.Demo.Pages
             {
                 StopPlaying();
                 await MediaDevicesService.UpdateDeviceList(true);
-                mediaStream = await MediaDevicesService.MediaDevices.GetUserMedia();
+                mediaStream = await MediaDevicesService.MediaDevices.GetUserMedia(new { video = true, audio = false });
                 videoCapture.Video.SrcObject = mediaStream;
             }
             catch { }
