@@ -48,9 +48,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="OpenCvSharp4" Version="4.9.0.20240103" />
-		<PackageReference Include="OpenCvSharp4.runtime.wasm" Version="4.9.0.20240103" PrivateAssets="all" />
-		<PackageReference Include="SpawnDev.BlazorJS" Version="2.2.63" />
+		<PackageReference Include="OpenCvSharp4" Version="4.10.0.20240616" />
+		<PackageReference Include="OpenCvSharp4.runtime.wasm" Version="4.10.0.20240616" PrivateAssets="all" />
+		<PackageReference Include="SpawnDev.BlazorJS" Version="2.4.6" />
 	</ItemGroup>
 
 </Project>
